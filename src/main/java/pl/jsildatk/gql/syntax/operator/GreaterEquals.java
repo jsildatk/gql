@@ -2,6 +2,8 @@ package pl.jsildatk.gql.syntax.operator;
 
 import org.springframework.data.mongodb.core.query.Criteria;
 
+import java.util.List;
+
 /**
  * @since 1.0.0
  */
@@ -15,6 +17,11 @@ public class GreaterEquals implements OperatorSyntax {
     @Override
     public String getOperator() {
         return ">=";
+    }
+    
+    @Override
+    public Criteria getCriteria(Criteria parent, List<String> values) {
+        return null;
     }
     
 }

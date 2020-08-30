@@ -5,23 +5,23 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import java.util.List;
 
 /**
- * @since 1.0.1
+ * @since 1.0.3
  */
-public class StartsWith implements OperatorSyntax {
+public class In implements OperatorSyntax {
     
     @Override
     public Criteria getCriteria(Criteria parent, String value) {
-        return parent.regex("^" + value);
+        return parent.in(value);
     }
     
     @Override
     public String getOperator() {
-        return "^";
+        return "in";
     }
     
     @Override
     public Criteria getCriteria(Criteria parent, List<String> values) {
-        return null;
+        return parent.in(values);
     }
     
 }

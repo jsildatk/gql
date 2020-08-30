@@ -51,6 +51,26 @@ public class QueryParserImplTest {
     }
     
     @Test
+    public void testParsingWithInvalidInSyntax() {
+        // given
+        final SyntaxPart part = new SyntaxPart("developer", "IN", "asd, asd)");
+        // when
+        final QueryException exception = assertThrows(QueryException.class, () -> queryParser.parse(part));
+        // then
+        assertThat(exception.getMessage(), containsString("Query is invalid. Must starts with '(' and ends with ')'"));
+    }
+    
+    @Test
+    public void testParsingWithInvalidNotInSyntax() {
+        // given
+        final SyntaxPart part = new SyntaxPart("developer", "NOT IN", "asd, asd)");
+        // when
+        final QueryException exception = assertThrows(QueryException.class, () -> queryParser.parse(part));
+        // then
+        assertThat(exception.getMessage(), containsString("Query is invalid. Must starts with '(' and ends with ')'"));
+    }
+    
+    @Test
     public void testParsingWithValidPart() {
         // given
         final SyntaxPart part = new SyntaxPart("developer", "=", "asd");

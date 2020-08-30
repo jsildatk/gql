@@ -30,6 +30,10 @@ public class OperatorSyntaxFactory {
             return new StartsWith();
         } else if ( "ENDS WITH".equalsIgnoreCase(operator) ) {
             return new EndsWith();
+        } else if ( "IN".equalsIgnoreCase(operator) ) {
+            return new In();
+        } else if ( "NOT IN".equalsIgnoreCase(operator) ) {
+            return new NotIn();
         }
         throw new NotSupportedOperatorException(String.format("Operator: %s is not supported", operator));
     }

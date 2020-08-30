@@ -39,7 +39,7 @@ public class QueryRestControllerTest extends RestControllerAbstractTest {
     }
     
     @Test
-    public void testResponseWith400StatusWhileParsing() throws Exception {
+    public void testResponseWithSuccessfulParsing() throws Exception {
         final String request = objectMapper.writeValueAsString(new SyntaxPart("asd", "asd", "asd"));
         when(queryService.getGamesFromQuery(any())).thenReturn(Lists.newArrayList(new GameEntity()));
         
