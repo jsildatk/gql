@@ -1,6 +1,7 @@
 package pl.jsildatk.gql.parser;
 
 import org.springframework.data.mongodb.core.query.Criteria;
+import pl.jsildatk.gql.syntax.QueryException;
 import pl.jsildatk.gql.syntax.SyntaxPart;
 
 /**
@@ -13,8 +14,9 @@ public interface QueryParser {
      *
      * @param part syntax part
      * @return database criteria
+     * @throws QueryException if part is in invalid format
      * @since 1.0.0
      */
-    Criteria parse(final SyntaxPart part);
+    Criteria parse(final SyntaxPart part) throws QueryException;
     
 }

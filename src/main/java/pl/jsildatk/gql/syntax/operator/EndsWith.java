@@ -12,4 +12,9 @@ public class EndsWith implements OperatorSyntax {
         return parent.regex(value + "$");
     }
     
+    @Override
+    public String getOperator() {
+        return "$";
+    }
+    
 }

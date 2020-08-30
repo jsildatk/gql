@@ -12,4 +12,9 @@ public class NotEquals implements OperatorSyntax {
         return parent.ne(value);
     }
     
+    @Override
+    public String getOperator() {
+        return "!=";
+    }
+    
 }

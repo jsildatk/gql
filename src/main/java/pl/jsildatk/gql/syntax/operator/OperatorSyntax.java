@@ -13,6 +13,12 @@ public interface OperatorSyntax {
      * @return query criteria based on operator
      * @since 1.0.0
      */
-    Criteria getCriteria(final Criteria parent,final String value);
+    Criteria getCriteria(final Criteria parent, final String value);
+    
+    /**
+     * @return operator as string
+     * @since 1.0.2
+     */
+    String getOperator();
     
 }

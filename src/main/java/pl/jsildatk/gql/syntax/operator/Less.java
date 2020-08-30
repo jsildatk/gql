@@ -12,4 +12,9 @@ public class Less implements OperatorSyntax {
         return parent.lt(value);
     }
     
+    @Override
+    public String getOperator() {
+        return "<";
+    }
+    
 }

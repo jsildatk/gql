@@ -41,6 +41,16 @@ public class QueryParserImplTest {
     }
     
     @Test
+    public void testParsingWithInvalidNumericOperator() {
+        // given
+        final SyntaxPart part = new SyntaxPart("developer", ">", "asd");
+        // when
+        final QueryException exception = assertThrows(QueryException.class, () -> queryParser.parse(part));
+        // then
+        assertThat(exception.getMessage(), containsString("Numeric operator can only be used with 'year' field"));
+    }
+    
+    @Test
     public void testParsingWithValidPart() {
         // given
         final SyntaxPart part = new SyntaxPart("developer", "=", "asd");

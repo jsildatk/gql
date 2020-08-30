@@ -12,4 +12,9 @@ public class Equals implements OperatorSyntax {
         return parent.is(value);
     }
     
+    @Override
+    public String getOperator() {
+        return "=";
+    }
+    
 }

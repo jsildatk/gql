@@ -12,4 +12,9 @@ public class GreaterEquals implements OperatorSyntax {
         return parent.gte(value);
     }
     
+    @Override
+    public String getOperator() {
+        return ">=";
+    }
+    
 }

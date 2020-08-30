@@ -12,4 +12,9 @@ public class Greater implements OperatorSyntax {
         return parent.gt(value);
     }
     
+    @Override
+    public String getOperator() {
+        return ">";
+    }
+    
 }
