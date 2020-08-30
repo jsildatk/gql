@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>pl.jsildatk</groupId>
 	<artifactId>gql</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.1-SNAPSHOT</version>
 	<name>gql</name>
 	<description>Backend for GQL</description>
 

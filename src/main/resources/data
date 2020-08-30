@@ -1,0 +1,5 @@
+db.game.remove({});
+db.game.insert({title: "Witcher 3", publisher: "CD Projekt", developer: "CD Projekt Red", genre: "RPG", year: "2015"});
+db.game.insert({title: "Assassin's Creed 2", publisher: "Ubisoft", developer: "Ubisoft", genre: "Action", year: "2011"});
+db.game.insert({title: "Assassin's Creed", publisher: "Ubisoft", developer: "Ubisoft", genre: "Action", year: "2009"});
+db.game.insert({title: "Iracing", publisher: "Iracing", developer: "Iracing", genre: "Racing", year: "2009"});
