@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>pl.jsildatk</groupId>
 	<artifactId>gql</artifactId>
-	<version>1.0.1-SNAPSHOT</version>
+	<version>1.0.2-SNAPSHOT</version>
 	<name>gql</name>
 	<description>Backend for GQL</description>
 
@@ -23,6 +23,8 @@
 		<guava.version>29.0-jre</guava.version>
 		<maven-surefire-plugin.version>3.0.0-M4</maven-surefire-plugin.version>
 		<slf4j-log4j12.version>1.7.30</slf4j-log4j12.version>
+		<cucumber-junit.version>1.2.5</cucumber-junit.version>
+		<cucumber-java.version>1.2.5</cucumber-java.version>
 	</properties>
 
 	<dependencies>
@@ -75,12 +77,23 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
-			<exclusions>
-				<exclusion>
-					<groupId>org.junit.vintage</groupId>
-					<artifactId>junit-vintage-engine</artifactId>
-				</exclusion>
-			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>info.cukes</groupId>
+			<artifactId>cucumber-junit</artifactId>
+			<version>${cucumber-junit.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>info.cukes</groupId>
+			<artifactId>cucumber-java</artifactId>
+			<version>${cucumber-java.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>info.cukes</groupId>
+			<artifactId>cucumber-spring</artifactId>
+			<version>${cucumber-java.version}</version>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 
@@ -90,8 +103,19 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>${maven-surefire-plugin.version}</version>
+				<dependencies>
+					<dependency>
+						<groupId>org.apache.maven.surefire</groupId>
+						<artifactId>surefire-junit4</artifactId>
+						<version>${maven-surefire-plugin.version}</version>
+					</dependency>
+				</dependencies>
 				<configuration>
 					<skip>${skipTests}</skip>
+					<includes>
+						<include>pl.jsildatk.gql.service.CucumberServiceRunner</include>
+						<include>**/*Test.java</include>
+					</includes>
 				</configuration>
 			</plugin>
 			<plugin>

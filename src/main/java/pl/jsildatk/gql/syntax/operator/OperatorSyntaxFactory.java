@@ -26,6 +26,10 @@ public class OperatorSyntaxFactory {
             return new Less();
         } else if ( "<=".equals(operator) ) {
             return new LessEquals();
+        } else if ( "STARTS WITH".equalsIgnoreCase(operator) ) {
+            return new StartsWith();
+        } else if ( "ENDS WITH".equalsIgnoreCase(operator) ) {
+            return new EndsWith();
         }
         throw new NotSupportedOperatorException(String.format("Operator: %s is not supported", operator));
     }

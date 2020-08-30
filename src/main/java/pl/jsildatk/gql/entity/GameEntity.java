@@ -29,6 +29,6 @@ public class GameEntity {
     
     private String genre;
     
-    private int year;
+    private String year;
     
 }
