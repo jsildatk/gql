@@ -41,6 +41,10 @@ public abstract class AbstractStepdef {
     
     protected String value;
     
+    protected String sortOrder;
+    
+    protected String sortField;
+    
     protected List<GameDTO> result;
     
     protected void setUp() {

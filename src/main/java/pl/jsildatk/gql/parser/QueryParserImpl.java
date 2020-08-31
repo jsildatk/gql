@@ -2,9 +2,13 @@ package pl.jsildatk.gql.parser;
 
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Service;
+import pl.jsildatk.gql.dto.QueryDTO;
+import pl.jsildatk.gql.dto.QueryRequest;
 import pl.jsildatk.gql.syntax.QueryException;
+import pl.jsildatk.gql.syntax.SortPart;
 import pl.jsildatk.gql.syntax.SyntaxPart;
 import pl.jsildatk.gql.syntax.field.FieldSyntax;
 import pl.jsildatk.gql.syntax.field.FieldSyntaxFactory;
@@ -13,6 +17,8 @@ import pl.jsildatk.gql.syntax.operator.In;
 import pl.jsildatk.gql.syntax.operator.NotIn;
 import pl.jsildatk.gql.syntax.operator.OperatorSyntax;
 import pl.jsildatk.gql.syntax.operator.OperatorSyntaxFactory;
+import pl.jsildatk.gql.syntax.sort.SortSyntax;
+import pl.jsildatk.gql.syntax.sort.SortSyntaxFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,9 +28,11 @@ import java.util.List;
 public class QueryParserImpl implements QueryParser {
     
     @Override
-    public Criteria parse(final SyntaxPart part) throws QueryException {
-        log.info("Parsing: {}", part);
+    public QueryDTO parse(final QueryRequest query) throws QueryException {
+        log.info("Parsing: {}", query);
         
+        final SyntaxPart part = query.getSyntax()
+                .get(0);
         final FieldSyntax field = FieldSyntaxFactory.getFieldSyntax(part.getField());
         final OperatorSyntax operator = OperatorSyntaxFactory.getOperatorSyntax(part.getOperator());
         final String value = part.getValue();
@@ -37,11 +45,21 @@ public class QueryParserImpl implements QueryParser {
             throw new QueryException("Query is invalid. Must starts with '(' and ends with ')'");
         }
         
-        final Criteria main = Criteria.where(field.getField());
-        if ( operator instanceof In || operator instanceof NotIn ) {
-            return operator.getCriteria(main, createCollectionCriteria(value));
+        return new QueryDTO(resolveCriteria(operator, field, value), resolveSort(query.getSort()));
+    }
+    
+    private Criteria resolveCriteria(OperatorSyntax operatorSyntax, FieldSyntax fieldSyntax, String value) {
+        final Criteria main = Criteria.where(fieldSyntax.getField());
+        return (operatorSyntax instanceof In || operatorSyntax instanceof NotIn) ? operatorSyntax.getCriteria(main, createCollectionCriteria(value)) :
+                operatorSyntax.getCriteria(main, value);
+    }
+    
+    private Sort resolveSort(SortPart sortPart) {
+        if ( sortPart == null ) {
+            return null;
         }
-        return operator.getCriteria(main, value);
+        final SortSyntax sortSyntax = SortSyntaxFactory.getSortSyntax(sortPart.getOrder(), sortPart.getField());
+        return sortSyntax.getSort(sortPart.getField());
     }
     
     private List<String> createCollectionCriteria(String value) {

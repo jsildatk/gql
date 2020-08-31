@@ -1,8 +1,8 @@
 package pl.jsildatk.gql.parser;
 
-import org.springframework.data.mongodb.core.query.Criteria;
+import pl.jsildatk.gql.dto.QueryDTO;
+import pl.jsildatk.gql.dto.QueryRequest;
 import pl.jsildatk.gql.syntax.QueryException;
-import pl.jsildatk.gql.syntax.SyntaxPart;
 
 /**
  * Service for parsing query
@@ -10,13 +10,13 @@ import pl.jsildatk.gql.syntax.SyntaxPart;
 public interface QueryParser {
     
     /**
-     * Parse single query's part
+     * Parse Query request containing syntax parts and sort order
      *
-     * @param part syntax part
-     * @return database criteria
-     * @throws QueryException if part is in invalid format
+     * @param query query request
+     * @return dto containing criteria and sort
+     * @throws QueryException if syntax part or sort order is in invalid format
      * @since 1.0.0
      */
-    Criteria parse(final SyntaxPart part) throws QueryException;
+    QueryDTO parse(final QueryRequest query) throws QueryException;
     
 }

@@ -1,6 +1,6 @@
 package pl.jsildatk.gql.dao;
 
-import org.springframework.data.mongodb.core.query.Criteria;
+import pl.jsildatk.gql.dto.QueryDTO;
 import pl.jsildatk.gql.entity.GameEntity;
 
 import java.util.List;
@@ -13,10 +13,10 @@ public interface GameEntityDAO {
     /**
      * Get list of entities from database by criteria
      *
-     * @param criteria database criteria
+     * @param queryDTO dto containing criteria and sort
      * @return list of GameEntity objects
      * @since 1.0.0
      */
-    List<GameEntity> getByQuery(final Criteria criteria);
+    List<GameEntity> getByQuery(final QueryDTO queryDTO);
     
 }
