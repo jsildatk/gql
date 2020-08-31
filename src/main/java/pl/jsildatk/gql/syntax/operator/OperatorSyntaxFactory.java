@@ -36,6 +36,8 @@ public class OperatorSyntaxFactory {
             return new NotIn();
         } else if ( "*".equals(operator) ) {
             return new Asterisk();
+        } else if ( "BETWEEN".equalsIgnoreCase(operator) ) {
+            return new Between();
         }
         throw new NotSupportedOperatorException(String.format("Operator: %s is not supported", operator));
     }

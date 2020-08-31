@@ -10,6 +10,7 @@ import pl.jsildatk.gql.syntax.SyntaxPart;
 import pl.jsildatk.gql.syntax.field.NotSupportedFieldException;
 import pl.jsildatk.gql.syntax.operator.NotSupportedOperatorException;
 import pl.jsildatk.gql.syntax.sort.NotSupportedSortException;
+import pl.jsildatk.gql.validator.OperatorValidator;
 
 import java.util.Collections;
 
@@ -17,6 +18,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.CoreMatchers.containsString;
+import static org.mockito.Mockito.mock;
 
 public class QueryParserImplTest {
     
@@ -24,7 +26,9 @@ public class QueryParserImplTest {
     
     @BeforeEach
     public void setUp() {
-        queryParser = new QueryParserImpl();
+        OperatorValidator betweenValidator = mock(OperatorValidator.class);
+        OperatorValidator numericValidator = mock(OperatorValidator.class);
+        queryParser = new QueryParserImpl(betweenValidator, numericValidator);
     }
     
     @Test
@@ -47,39 +51,6 @@ public class QueryParserImplTest {
         final QueryException exception = assertThrows(NotSupportedOperatorException.class, () -> queryParser.parse(query));
         // then
         assertThat(exception.getMessage(), containsString("Operator: =! is not supported"));
-    }
-    
-    @Test
-    public void testParsingWithInvalidNumericOperator() {
-        // given
-        final SyntaxPart part = new SyntaxPart("developer", ">", "asd");
-        final QueryRequest query = new QueryRequest(Collections.singletonList(part), null);
-        // when
-        final QueryException exception = assertThrows(QueryException.class, () -> queryParser.parse(query));
-        // then
-        assertThat(exception.getMessage(), containsString("Numeric operator can only be used with 'year' field"));
-    }
-    
-    @Test
-    public void testParsingWithInvalidInSyntax() {
-        // given
-        final SyntaxPart part = new SyntaxPart("developer", "IN", "asd, asd)");
-        final QueryRequest query = new QueryRequest(Collections.singletonList(part), null);
-        // when
-        final QueryException exception = assertThrows(QueryException.class, () -> queryParser.parse(query));
-        // then
-        assertThat(exception.getMessage(), containsString("Query is invalid. Must starts with '(' and ends with ')'"));
-    }
-    
-    @Test
-    public void testParsingWithInvalidNotInSyntax() {
-        // given
-        final SyntaxPart part = new SyntaxPart("developer", "NOT IN", "asd, asd)");
-        final QueryRequest query = new QueryRequest(Collections.singletonList(part), null);
-        // when
-        final QueryException exception = assertThrows(QueryException.class, () -> queryParser.parse(query));
-        // then
-        assertThat(exception.getMessage(), containsString("Query is invalid. Must starts with '(' and ends with ')'"));
     }
     
     @Test

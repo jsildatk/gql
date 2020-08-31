@@ -1,6 +1,7 @@
 package pl.jsildatk.gql.parser;
 
 import com.google.common.collect.Lists;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -12,20 +13,22 @@ import pl.jsildatk.gql.syntax.SortPart;
 import pl.jsildatk.gql.syntax.SyntaxPart;
 import pl.jsildatk.gql.syntax.field.FieldSyntax;
 import pl.jsildatk.gql.syntax.field.FieldSyntaxFactory;
-import pl.jsildatk.gql.syntax.field.Year;
-import pl.jsildatk.gql.syntax.operator.In;
-import pl.jsildatk.gql.syntax.operator.NotIn;
-import pl.jsildatk.gql.syntax.operator.OperatorSyntax;
-import pl.jsildatk.gql.syntax.operator.OperatorSyntaxFactory;
+import pl.jsildatk.gql.syntax.operator.*;
 import pl.jsildatk.gql.syntax.sort.SortSyntax;
 import pl.jsildatk.gql.syntax.sort.SortSyntaxFactory;
+import pl.jsildatk.gql.validator.OperatorValidator;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class QueryParserImpl implements QueryParser {
+    
+    private final OperatorValidator betweenValidator;
+    
+    private final OperatorValidator numericValidator;
     
     @Override
     public QueryDTO parse(final QueryRequest query) throws QueryException {
@@ -37,20 +40,22 @@ public class QueryParserImpl implements QueryParser {
         final OperatorSyntax operator = OperatorSyntaxFactory.getOperatorSyntax(part.getOperator());
         final String value = part.getValue();
         
-        if ( !(field instanceof Year) && isNumericOperator(operator.getOperator()) ) {
-            throw new QueryException("Numeric operator can only be used with 'year' field");
-        }
-        
-        if ( (operator instanceof In || operator instanceof NotIn) && !isValidFormat(value) ) {
-            throw new QueryException("Query is invalid. Must starts with '(' and ends with ')'");
-        }
+        validate(operator, field, value);
         
         return new QueryDTO(resolveCriteria(operator, field, value), resolveSort(query.getSort()));
     }
     
+    private void validate(OperatorSyntax operatorSyntax, FieldSyntax fieldSyntax, String value) {
+        if ( operatorSyntax instanceof Between ) {
+            betweenValidator.validate(fieldSyntax, value);
+        }
+        numericValidator.validate(fieldSyntax, operatorSyntax.getOperator());
+    }
+    
     private Criteria resolveCriteria(OperatorSyntax operatorSyntax, FieldSyntax fieldSyntax, String value) {
         final Criteria main = Criteria.where(fieldSyntax.getField());
-        return (operatorSyntax instanceof In || operatorSyntax instanceof NotIn) ? operatorSyntax.getCriteria(main, createCollectionCriteria(value)) :
+        return (operatorSyntax instanceof In || operatorSyntax instanceof NotIn || operatorSyntax instanceof Between) ?
+                operatorSyntax.getCriteria(main, createCollectionCriteria(value)) :
                 operatorSyntax.getCriteria(main, value);
     }
     
@@ -64,19 +69,10 @@ public class QueryParserImpl implements QueryParser {
     
     private List<String> createCollectionCriteria(String value) {
         final List<String> values = new ArrayList<>();
-        for ( String a : Lists.newArrayList(value.replaceAll("[()]", "")
-                .split(",")) ) {
+        for ( String a : Lists.newArrayList(value.split(",")) ) {
             values.add(a.trim());
         }
         return values;
-    }
-    
-    private boolean isValidFormat(String value) {
-        return value.startsWith("(") && value.endsWith(")");
-    }
-    
-    private boolean isNumericOperator(String operator) {
-        return operator.equals(">") || operator.equals(">=") || operator.equals("<") || operator.equals("<=");
     }
     
 }
