@@ -34,6 +34,8 @@ public class OperatorSyntaxFactory {
             return new In();
         } else if ( "NOT IN".equalsIgnoreCase(operator) ) {
             return new NotIn();
+        } else if ( "*".equals(operator) ) {
+            return new Asterisk();
         }
         throw new NotSupportedOperatorException(String.format("Operator: %s is not supported", operator));
     }
