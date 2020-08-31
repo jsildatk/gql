@@ -38,6 +38,8 @@ public class OperatorSyntaxFactory {
             return new Asterisk();
         } else if ( "BETWEEN".equalsIgnoreCase(operator) ) {
             return new Between();
+        } else if ( "REGEX".equalsIgnoreCase(operator) ) {
+            return new Regex();
         }
         throw new NotSupportedOperatorException(String.format("Operator: %s is not supported", operator));
     }
