@@ -12,8 +12,6 @@ import pl.jsildatk.gql.syntax.operator.NotSupportedOperatorException;
 import pl.jsildatk.gql.syntax.sort.NotSupportedSortException;
 import pl.jsildatk.gql.validator.OperatorValidator;
 
-import java.util.Collections;
-
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -35,7 +33,7 @@ public class QueryParserImplTest {
     public void testParsingWithNoSupportedFieldSyntax() {
         // given
         final SyntaxPart part = new SyntaxPart("not existing field", "=", "asd");
-        final QueryRequest query = new QueryRequest(Collections.singletonList(part), null);
+        final QueryRequest query = new QueryRequest(part, null);
         // when
         final QueryException exception = assertThrows(NotSupportedFieldException.class, () -> queryParser.parse(query));
         // then
@@ -46,7 +44,7 @@ public class QueryParserImplTest {
     public void testParsingWithNoSupportedOperatorSyntax() {
         // given
         final SyntaxPart part = new SyntaxPart("developer", "=!", "asd");
-        final QueryRequest query = new QueryRequest(Collections.singletonList(part), null);
+        final QueryRequest query = new QueryRequest(part, null);
         // when
         final QueryException exception = assertThrows(NotSupportedOperatorException.class, () -> queryParser.parse(query));
         // then
@@ -57,7 +55,7 @@ public class QueryParserImplTest {
     public void testParsingWithInvalidSortOrderSyntax() {
         // given
         final SyntaxPart part = new SyntaxPart("developer", "=", "asd");
-        final QueryRequest query = new QueryRequest(Collections.singletonList(part), new SortPart("A", "developer"));
+        final QueryRequest query = new QueryRequest(part, new SortPart("A", "developer"));
         // when
         final QueryException exception = assertThrows(NotSupportedSortException.class, () -> queryParser.parse(query));
         // then
@@ -68,7 +66,7 @@ public class QueryParserImplTest {
     public void testParsingWithInvalidSortFieldSyntax() {
         // given
         final SyntaxPart part = new SyntaxPart("developer", "=", "asd");
-        final QueryRequest query = new QueryRequest(Collections.singletonList(part), new SortPart("ASCENDING", "A"));
+        final QueryRequest query = new QueryRequest(part, new SortPart("ASCENDING", "A"));
         // when
         final QueryException exception = assertThrows(NotSupportedFieldException.class, () -> queryParser.parse(query));
         // then
@@ -79,7 +77,7 @@ public class QueryParserImplTest {
     public void testParsingWithValidPart() {
         // given
         final SyntaxPart part = new SyntaxPart("developer", "=", "asd");
-        final QueryRequest query = new QueryRequest(Collections.singletonList(part), null);
+        final QueryRequest query = new QueryRequest(part, null);
         // when
         final QueryDTO result = queryParser.parse(query);
         // then

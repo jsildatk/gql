@@ -9,7 +9,6 @@ import pl.jsildatk.gql.dto.QueryRequest;
 import pl.jsildatk.gql.syntax.SortPart;
 import pl.jsildatk.gql.syntax.SyntaxPart;
 
-import java.util.Collections;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -51,11 +50,11 @@ public class ParserStepdefs extends AbstractStepdef {
     public void iAmParsingQuery() {
         if ( sortOrder == null && sortField == null ) {
             result = convertToDTO(
-                    queryService.getGamesFromQuery(new QueryRequest(Collections.singletonList(new SyntaxPart(field, operator, value)), null)));
+                    queryService.getGamesFromQuery(new QueryRequest(new SyntaxPart(field, operator, value), null)));
         } else {
             result = convertToDTO(
                     queryService.getGamesFromQuery(
-                            new QueryRequest(Collections.singletonList(new SyntaxPart(field, operator, value)), new SortPart(sortOrder, sortField))));
+                            new QueryRequest(new SyntaxPart(field, operator, value), new SortPart(sortOrder, sortField))));
         }
     }
     

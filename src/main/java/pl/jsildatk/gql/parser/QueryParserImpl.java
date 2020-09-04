@@ -34,8 +34,7 @@ public class QueryParserImpl implements QueryParser {
     public QueryDTO parse(final QueryRequest query) throws QueryException {
         log.info("Parsing: {}", query);
         
-        final SyntaxPart part = query.getSyntax()
-                .get(0);
+        final SyntaxPart part = query.getSyntax();
         final FieldSyntax field = FieldSyntaxFactory.getFieldSyntax(part.getField());
         final OperatorSyntax operator = OperatorSyntaxFactory.getOperatorSyntax(part.getOperator());
         final String value = part.getValue();
